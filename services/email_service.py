@@ -4,12 +4,12 @@ from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from config.settings import settings
 from jinja2 import Environment, FileSystemLoader
 
+#Servicio para el envio de los distintos mails segun los estados seeccionados por el usuario
 
 # ---------------------------------
 # LOGGER
 # ---------------------------------
 logger = logging.getLogger(__name__)
-
 
 conf = ConnectionConfig(
     MAIL_USERNAME=settings.MAIL_USERNAME,
@@ -18,11 +18,11 @@ conf = ConnectionConfig(
     MAIL_SERVER=settings.MAIL_SERVER,
     MAIL_PORT=settings.MAIL_PORT,
     MAIL_STARTTLS=settings.MAIL_TLS,
-    MAIL_SSL_TLS=settings.MAIL_SSL
+    MAIL_SSL_TLS=settings.MAIL_SSL,
+    USE_CREDENTIALS=False
 )
 
 env = Environment(loader=FileSystemLoader("templates"))
-
 
 async def enviar_expediente_creado(destinatario, nro_legajo, anio, partida):
 
