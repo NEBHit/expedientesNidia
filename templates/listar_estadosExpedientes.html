@@ -1,0 +1,36 @@
+{% extends "layouts/layout.html" %}
+
+{% block contentCuerpo %}
+
+<!--Incluir las ventanas modales para Crud
+    para el correcto funcionamiento de las ventanas modales se debe importar app.js con las funciones correspondientes. En este caso esta referenciado en loyuot.thml
+-->
+{% include "modalEstadoExpediente_Add.html" %}
+{% include "modalEstadoExpediente_Update.html" %}
+{% include "modalEstadoExpediente_Delete.html" %}
+
+<!--Armar la tabla de inspectors para el Crud-->
+{% import "tablaEstadoExpediente.html" as tablas %}
+
+<!--Nombre de las Columnas a mostar-->
+{% set encabezado = [
+      {'nombre': 'NOMBRE'},
+      {'nombre': 'DESCRIPCION'}
+    ] %}
+
+<!--Valores de las filas a mostar-->
+ {% set valores = [
+      ] %}
+ 
+ {% for estadoExpediente in estadosExpedientes %}
+    {% set _ = valores.append({
+            'id': estadoExpediente.idEstadoExpediente,
+            'nombre': estadoExpediente.nombre,
+            'descripcion': estadoExpediente.descripcion
+        }) %}
+ {% endfor %}    
+
+ <!--PARAMETROS:   mostrar_tabla(titulo, nomtabla, columnas, valores, request) -->
+{{ tablas.mostrar_tabla("Estados de Expedientes Actuales", "Estado Expediente", "EstadoExpediente",encabezado, valores, request) }}
+
+{% endblock %}

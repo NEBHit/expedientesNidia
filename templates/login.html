@@ -1,0 +1,102 @@
+{% extends "layouts/layout.html" %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block content %}
+<input type="hidden" id="flag_mostrar_cambio" value="{{ '1' if mostrar_cambio else '0' }}">
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="modal-header">
+                <h4 class="card-title text-center mb-4"><strong>INICIAR SESIÓN</strong></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="card-body">
+                {% if error_login %}
+                    <div class="alert alert-danger text-center">
+                        {{ error_login }}
+                    </div>
+                {% endif %}
+
+                <form method="post" action="/login">
+                    
+                        <div class="form-group">
+                             <label for="usuario"><strong>USUARIO *</strong> </label>
+                             <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
+                                </div>
+
+                                <input type="text" class="form-control" name="usuario" id="usuario" placeholder="Nombre de Usuario *" value="{{ usuario | default('') }}" oninput="this.value=this.value.toUpperCase()" maxlength="100" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group mt-2">
+                            <label><strong>CONTRASEÑA *</strong></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                </div>
+                                <input type="password" class="form-control" name="clave" id="clave" placeholder="Contraseña *" oninput="this.value=this.value.toUpperCase()" required>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" onclick="togglePassword" itle="Mostrar / Ocultar contraseña">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                       <div class="form-group">
+                            <label><strong>CAPTCHA *</strong></label>
+
+                            <div class="input-group align-items-center">
+
+                                <input type="text" class="form-control" name="captcha" id="captcha" placeholder="Ingrese el código" required>
+
+                                <!-- Captcha visual -->
+                                <div class="captcha-box ml-2 px-3 py-2" id="captcha-text">
+                                    {{ captcha }}
+                                </div>
+
+                                <!-- Recargar -->
+                                <div class="input-group-append">
+                                    <a href="javascript:void(0)" class="btn btn-outline-primary" id="btn-refresh-captcha" title="Recargar captcha"> <i class="bi bi-arrow-clockwise"></i></a>
+                                </div>
+                       
+                            </div>
+                        </div>
+                    
+                        <div class="modal-footer" > 
+                                <button type="submit"  class="acepta btn btn-success w-100 py-2 font-weight-bold"><i class="bi bi-box-arrow-in-right"></i> INGRESAR </button>
+                        </div>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="javascript:void(0)" data-toggle="modal" data-target="#update_CambioContraseña">
+                            ¿Olvidó su contraseña?
+                        </a>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<link rel="stylesheet" href="static/login.css">
+<script type="text/javascript" src="static/js/login.js"></script> 
+
+{% include "modalCambioContraseña.html" %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const flag = document.getElementById("flag_mostrar_cambio");
+
+        if (flag && flag.value === "1") {
+            $('#update_CambioContraseña').modal('show');
+        }
+    });
+</script>
+
+{% endblock %}

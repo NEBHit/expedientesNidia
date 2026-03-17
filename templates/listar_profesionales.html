@@ -1,0 +1,50 @@
+{% extends "layouts/layout.html" %}
+
+{% block contentCuerpo %}
+
+<!--Incluir las ventanas modales para Crud
+    para el correcto funcionamiento de las ventanas modales se debe importar app.js con las funciones correspondientes. En este caso esta referenciado en loyuot.thml
+-->
+{% include "modalProfesional_Add.html" %}
+{% include "modalProfesional_Update.html" %}
+{% include "modalProfesional_Delete.html" %}
+
+<!--Armar la tabla de inspectors para el Crud-->
+{% import "tablaProfesional.html" as tablas %}
+
+<!--Nombre de las Columnas a mostar-->
+{% set encabezado = [
+      {'nombre': 'CUIL/CUIT'},
+      {'nombre': 'APELLIDO'},
+      {'nombre': 'NOMBRE'},
+      {'nombre': 'MATRICULA'}
+    ] %}
+
+<!--Valores de las filas a mostar-->
+ {% set valores = [
+      ] %}
+ 
+ {% for profesional in profesionales %}
+    {% set _ = valores.append({
+            'id': profesional.idProfesional,
+            'cuil_cuit': profesional.cuil_cuit,
+            'apellido': profesional.apellido,
+            'nombre': profesional.nombre,
+            'matricula': profesional.matricula,
+            'areaCelular': profesional.areaCelular,
+            'nroCelular': profesional.nroCelular,
+            'calle': profesional.calle,
+            'nroCalle': profesional.nroCalle,
+            'piso': profesional.piso,
+            'dpto': profesional.dpto,
+            'razonSocial': profesional.razonSocial,
+            'idTipoProfesion': profesional.idTipoProfesion,
+            'mail': profesional.email
+            
+        }) %}
+ {% endfor %}    
+
+ <!--PARAMETROS:   mostrar_tabla(titulo, nomtabla, columnas, valores, request) -->
+{{ tablas.mostrar_tabla("Profesionales Actuales", "Profesional", "Profesional", encabezado, valores, request) }}
+
+{% endblock %}

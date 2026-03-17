@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    {% block head %}
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="keywords" content="9 de julio,Bs As. Bromatología" />
+	<meta name="description" content="Bromatología" />
+ 
+	<title>{% block title %}OBRAS PARTICULARES - Expediente de Obra{% endblock %}</title>
+    <!-- Favicon -->
+	<link rel="icon" type="image/png" href="static/imagenes/favicon-16x16.png" sizes="16x16">
+        
+    <!-- LIBRERIAS BOOTSTRAP-->
+ 	<!-- Latest compiled and minified CSS -->
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.1.1/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+  	<!-- jQuery library -->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> 
+       
+    <!--  Core del sistema -->
+    <script type="text/javascript" src="static/js/app.js"></script> 
+    
+    <!--  Módulos -->
+    <script type="text/javascript" src="/static/js/expediente.js"></script>
+    <script type="text/javascript" src="static/js/funciones.js"></script>    
+    
+    <link rel="stylesheet" href="static/estilos.css">
+   
+    {% endblock %}
+</head>
+
+<body class="body" id="page-top"  >
+
+    <!--carga el archivo header.php para direccionar a la pagina .php que se incrustara entre la header y el footer-->
+    <header class="header-area">
+      
+        {% include "layouts/header.html" %}
+       
+    </header>
+    <main>
+        <section class="mainmenu-area sticky">	
+            <div id="content" class="container-fluid " >
+              {% block content %}   
+               
+              {% endblock %}
+            </div>
+        </section>
+        {% block contentCuerpo %}   
+        {% endblock %}      
+    </main>
+    <footer>
+        <div id="footer">
+            {% block footer %}
+            <!--carga el archivo header.php para direccionar a la pagina .php que se incrustara entre la header y el footer-->
+            {% if not hide_layout %}
+                {% include "layouts/footer.html" %}
+            {% endif %} 
+            {% endblock %}
+        </div>    
+    </footer>
+
+    <!-- Permite scrollar al incio de la pagina -->
+    <a class="scroll-to-top rounded" href="#page-top" style="display: inline; color:#f829a9">
+       <i class="fas fa-angle-up"><h2><strong>^</strong></h2></i>
+    </a>
+    
+</body>
+</html>

@@ -1,0 +1,75 @@
+{% block modal %}
+<div class="modal fade" id="update_TipoExpediente" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Actualizar Tipo Expediente</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <input type="hidden" id="IDTIPOEXPEDIENTEEditHIDDEN" name="IDTIPOEXPEDIENTEEditHIDDEN"/>
+                <div class="modal-body">
+                   
+                    <fieldset class="form-group">
+                
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="nombre">NOMBRE *</label>
+                                <input type="text" class="form-control" align="left" title="Nombre" name="NOMBREEdit" id="NOMBREEdit" placeholder="Nombre*" oninput="this.value=this.value.toUpperCase()" value="15" maxlength="100" required/>
+                            </div>
+                        </div>
+                            
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label for="descripcion">DESCRIPCIÓN </label><br>
+                                <input type="text"  name="DESCRIPCIONEdit" cols="100" rows="2" class="form-control" id="DESCRIPCIONEdit" title="Descripción" maxlength="250" oninput="this.value=this.value.toUpperCase()" placeholder="Descripción" >
+                            </div>
+                        </div>   
+                
+                    </fieldset>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="cancela btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="acepta btn btn-success" id="modificar_TipoExpediente">Actualizar</button>
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('modificar_TipoExpediente').addEventListener('click', async function(e) {
+    e.preventDefault(); // Evita que el formulario haga un POST tradicional
+
+    const id = document.getElementById('IDTIPOEXPEDIENTEEditHIDDEN').value;
+    const nombre = document.getElementById('NOMBREEdit').value;
+    const descripcion = document.getElementById('DESCRIPCIONEdit').value;
+
+    try {
+        const response = await fetch(`/tipoExpediente/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                nombre: nombre,
+                descripcion: descripcion
+            })
+        });
+
+        if (response.ok) {
+            $('#update_TipoExpediente').modal('hide');
+            location.reload(); // recarga tabla con datos actualizados
+        } else {
+            const error = await response.json();
+            alert('Error al actualizar Tipo Expediente: ' + (error.error || 'Error desconocido'));
+        }
+    } catch (err) {
+        alert('Error de red o del servidor: ' + err.message);
+    }
+});
+
+
+
+</script>
+{% endblock modal %}

@@ -1,0 +1,182 @@
+{% block modal %}
+<div class="modal fade" id="update_Profesional" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Actualizar Profesional</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <input type="hidden" id="IDPROFESIONALEditHIDDEN" name="IDPROFESIONALEditHIDDEN"/>
+            <div class="modal-body px-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-secondary text-white py-2" style="letter-spacing:1px;">
+                        <strong>DATOS PERSONALES</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="nombre"><strong>NOMBRE *</strong> </label>
+                                <input type="text" class="form-control" align="left" title="Nombre" name="nombreEdit" id="nombreEdit" placeholder="Nombre*" oninput="this.value=this.value.toUpperCase()" maxlength="100" required/>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="descripcion"><strong>APELLIDO * </strong> </label>
+                                <input type="text"  name="apellidoEdit"  class="form-control" id="apellidoEdit" title="Apellido" maxlength="150" oninput="this.value=this.value.toUpperCase()" placeholder="Apellido" required/>
+                            </div>
+                        </div>
+                        <!-- SEPARADOR -->
+                        <div class="mt-3"></div>
+                        <div class="row g-3">
+                            <div class="col-md-12">    
+                                <label ><strong>CUIT/CUIL</strong></label>
+                            </div>
+                            <div class="col-md-3">	
+                                <input disabled name="cuil_cuitEdit" type="text" class="form-control" id="cuil_cuitEdit" title="Cuit o Cuil, con el formato xx-xxxxxxxx-x"  maxlength="13" pattern="^\d{2}-\d{8}-\d{1}$" onKeyPress="handleMask(event, &#39;99-99999999-9&#39;)" placeholder="__-________-_ CUIT/CUIL*"  style="width:250px" required/>
+                            </div>
+                        </div> 
+                    </div>
+                </div> 
+                        
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-secondary text-white py-2" style="letter-spacing:1px;">
+                        <strong>DATOS CONTACTO</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3 mb-1">
+                            <div class="col-md-6">
+                                <label ><strong>TEL&Eacute;FONO CONTACTO (CELULAR) - SIN 0 Y SIN 15. Debe ingresar al menos uno</strong></label>
+                            </div>
+                            <div class="col-md-6">
+                                <label><strong>E-MAIL </strong></label>
+                            </div>
+                        </div> 
+                        <div class="row g-3">
+                            <div class="col-md-2">
+                                <input type="number" class="form-control" title="C&oacute;digo de &aacute;rea Tel. celular" name="areaCelularEdit" id="areaCelularEdit"  placeholder="&Aacute;rea" min="1" max="9999" size="4" maxlength="4" style="width:80px" oninput="" onChange="this.value = this.value.substring(0,4)"  />
+                            </div>
+                            <div class="col-md-4">
+                                <input type="number" class="form-control" title="N&uacute;mero tel&eacute;fono celular" name="nroCelularEdit" id="nroCelularEdit"  placeholder="Nro. sin 15"  min="1" max="99999999" size="8" maxlength="8" style="width:120px" oninput="" onChange="this.value = this.value.substring(0,8)"   />
+                            </div>
+                            <div class="col-md-6">
+                                <input type="email" class="form-control" title="E-MAIL, el que usaremos para contactarlo" name="emailEdit" id="emailEdit" placeholder="E-mail, el que usaremos para contactarlo. Preferentemente de Gmail" oninput="this.value=this.value.toLowerCase()"  />
+                            </div>
+                        </div>
+                        <!-- SEPARADOR -->
+                        <div class="mt-3"></div>
+                        <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="nombre"><strong>DOMICILIO</strong> </label>
+                                    <input name="calleEdit" type="text" class="form-control" id="calleEdit" title="Domicilio" maxlength="50" placeholder="Domicilio"  oninput="this.value=this.value.toUpperCase()"  />
+                                </div>
+                                <div class="col-md-1">
+                                    <label><strong>Nro. </strong></label>
+                                    <input  type="number" class="form-control" id="nroCalleEdit"  name="nroCalleEdit" title="Nro. Calle" maxlength="50" min="0" max="9999" size="4"  style="width:80px"  onChange="this.value = this.value.substring(0,4)" placeholder="Nro. Calle*"  />
+                                </div>
+                                <div class="col-md-1">
+                                    <label><strong>PISO </strong></label>
+                                    <input name="pisoEdit" type="text" class="form-control" id="pisoEdit" title="Piso" maxlength="2" size="2"  style="width:75px"  oninput="this.value=this.value.toUpperCase()" onChange="this.value = this.value.substring(0,2)" placeholder="Piso" />
+                                </div>
+                                <div class="col-md-1">
+                                    <label><strong>DPTO. </strong></label>
+                                    <input name="dptoEdit"  class="form-control" id="dptoEdit" title="Dpto." maxlength="2"  size="2"  style="width:75px" type="text" placeholder="Dpto."  oninput="this.value=this.value.toUpperCase()"/>
+                                </div>
+                        </div>    
+                    </div>
+                </div>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-secondary text-white py-2" style="letter-spacing:1px;">
+                        <strong>DATOS PROFESIONALES</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label ><strong>TIPO PROFESION *</strong></label>
+                                <select name="idTipoProfesionEdit" id="idTipoProfesionEdit" class="form-control" required>
+                                        {% for tipo in tiposProfesiones %}
+                                            <option value="{{ tipo.idTipoProfesion }}">{{ tipo.nombre }}</option>
+                                        {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label ><strong>MATRICULA</strong></label>
+                                <input type="text" class="form-control" title="Matrícula" name="matriculaEdit" id="matriculaEdit"  placeholder="Matr&iacute;cula" maxlength="10" style="width:100px" oninput="" onChange="this.value = this.value.substring(0,10)"  />
+                            </div>
+                        </div>
+                        <!-- SEPARADOR -->
+                        <div class="mt-3"></div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="nombre"><strong>RAZON SOCIAL (En caso de representar alguna empresa, contructora, etc.)</strong> </label>
+                                <input name="razonSocialEdit" type="text" class="form-control" id="razonSocialEdit" title="Raz&oacute;n Social" maxlength="250" placeholder="Raz&oacute;n Social"  oninput="this.value=this.value.toUpperCase()"  />
+                            </div>
+                        </div>  
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="cancela btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="acepta btn btn-success" id="modificar_Profesional">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    
+    document.getElementById('modificar_Profesional').addEventListener('click', async function(e) {
+    e.preventDefault(); // Evita que el formulario haga un POST tradicional
+
+    const id = document.getElementById('IDPROFESIONALEditHIDDEN').value;
+    const nombre = document.getElementById('nombreEdit').value;
+    const apellido = document.getElementById('apellidoEdit').value;
+    const cuil = document.getElementById('cuil_cuitEdit').value;
+    const calle = document.getElementById('calleEdit').value;
+    const nroCalle = document.getElementById('nroCalleEdit').value;
+    const piso = document.getElementById('pisoEdit').value;
+    const nroDpto = document.getElementById('dptoEdit').value;
+    const areaCelular = document.getElementById('areaCelularEdit').value;
+    const nroCelular = document.getElementById('nroCelularEdit').value;
+    const email = document.getElementById('emailEdit').value;
+    const matricula = document.getElementById('matriculaEdit').value;
+    const razonSocial = document.getElementById('razonSocialEdit').value;
+    const idTipoProfesion = document.getElementById('idTipoProfesionEdit').value;
+
+    try {
+        const response = await fetch(`/profesional/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: id,
+                nombre: nombre,
+                apellido: apellido,
+                cuil_cuit: cuil,
+                calle: calle,
+                nroCalle: nroCalle,
+                piso: piso,
+                nroDpto: nroDpto,
+                areaCelular: areaCelular,
+                nroCelular: nroCelular,
+                email: email,
+                matricula: matricula,
+                razonSocial: razonSocial,
+                idTipoProfesion: idTipoProfesion
+            })
+        });
+
+        if (response.ok) {
+            $('#update_Profesional').modal('hide');
+            location.reload(); // recarga tabla con datos actualizados
+        } else {
+            const error = await response.json();
+            alert('Error al actualizar Profesional: ' + (error.error || 'Error desconocido'));
+        }
+    } catch (err) {
+        alert('Error de red o del servidor: ' + err.message);
+    }
+});
+
+ 
+</script>
+{% endblock modal %}

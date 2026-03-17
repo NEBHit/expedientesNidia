@@ -1,0 +1,79 @@
+    
+<!--Template para mostrar tablas dinamicamente-->
+<!--template generico para tablas tubaladas. Se deben respetar los parametros-->
+<!--template generico. Se deben respetar los parametros-->
+<!--Este template generico el campo id no se muestra al usuario, son claves internas, no publicas. para que los botones modales funcionen deben 
+coorectamente estos deben poder recibir los campos que se pasan como parametro, si se desea pasar mas campos se debe crear otro template o bien 
+desde js cargar por ajax los valores a mostrar en los modales segun el caso  -->
+{% macro mostrar_tabla(titulo, nomBtnAdd, nomtabla, columnas, valores, request) %}
+<!--la macro debe recibir:
+    titulo = describe lo que se muestra,. Ej: Listado de Personas
+    nombtabla = nombre de la tabla que se consulta. Ej: Persona
+    columnas =  diccionario con los nombres que deben aparecer en cada columna (encabezado de tabla)
+    valores = diccionario con los valores que se cargan en cada columna (Filas de las tablas)
+    request = solicitud HTTP actual (acceso al contexto de la página actual)
+
+    Ojo! este template usa app.js para los botones de agregar, modificar y eliminar para abrir ventanas modales
+-->
+<br>
+<div class="container card shadow mb-4">
+    <div class="row">
+    <div class="col-lg-12">
+      <p>
+      <h4>{{ titulo }}</h4>
+      <hr  style="height:3px; color: #f05ba5; background-color: #f05ba5; width:100%; text-align: left; margin-left: 0px;" /> 
+    </div>
+  </div> 
+   
+    <br>
+   	<div class="row" >  
+    	<div class="col-md-12 text-left">	
+        	  <button type="button" class="boton_1 " data-toggle="modal" data-target="#add_{{nomtabla}}" title="Agregar {{nomBtnAdd}}" ><i class='glyphicon glyphicon-plus'></i> Agregar {{nomBtnAdd}}</button>
+        </div>
+    </div>
+    <p></p>
+{% if valores|length == 0  %}
+    <div >
+        <h6 class="m-0 font-weight-bold text-mda text-danger" align="center">NO HAY INFORMACIÓN CARGADA</h6>
+    </div>
+{% else %}
+    <div class="container-fluid">
+       <div class="table-responsive">
+           <table class="table table-sm table-hover rounded-top" border="0" cellspacing="1" cellpadding="4" width="100%" > 
+            <thead>
+            <tr>
+                <th class="table-warning" width="10" ></th>
+                <th class="table-warning" width="10" ></th>
+                <!--completo el encabezado de la tabla dinamicamente-->
+                {% for col in columnas %}
+                    <th class="table-warning" scope="col"  width="950">{{ col.nombre}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody >
+              {% set stylo = "table-warning" %}
+              <!--completo las filas de la tabla dinamicamente-->
+              {% for valor in valores %}
+              <tr>
+                  <td class="{{stylo}}"  width="10" >
+                    <button type="button" class="btn" data-toggle="modal" data-target="#update_{{nomtabla}}"  data-id="{{ valor.id}}"  data-nombre="{{ valor.nombre  | e  }}" data-apellido="{{ valor.apellido  | e  }}" data-cuil="{{ valor.cuil_cuit  | e  }}" data-calle="{{ valor.calle  | e  }}" data-nrocalle="{{ valor.nroCalle  | e  }}" data-piso="{{ valor.piso  | e  }}" data-dpto="{{ valor.dpto  | e  }}" data-areacel="{{ valor.areaCelular  | e  }}" data-nrocel="{{ valor.nroCelular  | e  }}" data-matricula="{{ valor.matricula  | e  }}" data-razonsocial="{{ valor.razonSocial  | e  }}" data-idtipoprof="{{ valor.idTipoProfesion  | e  }}" data-mail="{{ valor.mail  | e  }}" title="Modificar {{nomtabla}}"><i class='icon-edit icono-pequeno' ></i></button>
+                  </td>
+                  <td class="{{stylo}}"  width="10" >
+                    <button type="button" class="btn" data-toggle="modal" data-target="#delete_{{nomtabla}}" data-id="{{ valor.id }}" data-nombre="{{ valor.nombre  | e  }}" data-apellido="{{ valor.apellido  | e  }}" title="Borrar {{nomtabla}}"><i class='icon-trash icono-pequeno'></i></button>
+                  </td>
+                  {%for clave, dato in valor.items() %}
+                    
+                     {% if loop.index > 1 and loop.index < 6 %}
+                         <td class="table-secondary" scope="col" width="950º">{{ dato }}</td>
+                    {% endif %}
+                  {% endfor %}
+              </tr>
+              {% endfor %}
+        </tbody>
+    </table>
+    </div>
+  </div>
+{% endif %}
+</div>
+{% endmacro %}
+

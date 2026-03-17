@@ -1,0 +1,64 @@
+<!--Bloque Profesional-->
+ <!---Este bloque recibi un sufijo con los valores
+    sufijo="" para indicar que lo incluyo modalExpediente_Add.html
+    sufijo="Edit" para indicar que lo incluyo modalExpediente_Update.html
+      El sufijo se concatena a los name y id de cada etiqueta para diferenciarlos 
+ -->
+                            <div class="card shadow mb-4">
+                                <div class="card-header bg-secondary text-white  py-2 mb-2" style="letter-spacing:1px;">
+                                    <a class="collapsed card-link text-white" data-toggle="collapse" href="#collapseThree">
+                                        <div class="row" >
+                                            <div class="col-md-12 mb-1">
+                                                <strong>PROFESIONALES (Clickee aquí para ingresar los datos)</strong>
+                                                Si el profesional no figura. Salga de esta opción y agreguelo por la opción Tablas/Profesionales 
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                 
+                               <div class="card-body">
+                                    <fieldset class="form-group">
+                                        <div id="collapseThree" class="collapse" data-parent="#accordion">
+                                            <div class="row">
+                                                <div class="form-group col-md-6">
+                                                    <label ><strong>PROFESIONAL *</strong></label>
+                                                                        
+                                                    <select name="idProfesional{{ sufijo }}" id="idProfesional{{ sufijo }}" class="form-control" >
+                                                        <option value="" selected>Seleccione Profesional</option>
+                                                        {% for profesional in profesionales %}
+                                                            <option value="{{ profesional.idProfesional ~ '*'  ~profesional.apellido ~ ', ' ~ profesional.nombre ~ ' /Mat. ' ~ profesional.matricula }}">{{ profesional.apellido ~ ', ' ~ profesional.nombre ~ ' /Mat. ' ~ profesional.matricula}}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md-6">
+                                                    <label ><strong>CONTACTO PPAL.</strong></label>
+                                                    <select name="contactoPpal{{ sufijo }}" id="contactoPpal{{ sufijo }}" class="form-control" >
+                                                        <option value="1" >SI</option>
+                                                        <option value="0" selected>NO</option>
+                                                    </select>
+                                                </div>
+                                                <!--Carga dinámica por fechas alternadas por javaScript-->
+                                                    <input type="hidden" id="idFilaProf{{ sufijo }}" name="idFilaProf{{ sufijo }}" value="1" />
+                                                    <div class="row col-md-12" align="center">
+                                                        <div class="form-group col-md-12"  >
+                                                            <button type="button" class="boton_1" onclick="insertarProfesionales('{{ sufijo }}')" title="Agregar Profesional"  ><i class='glyphicon glyphicon-plus'></i> Agregar Profesional</button>
+                                                        </div>
+                                                    </div>   
+                                                    <div class="col-md-12">
+                                                        <table id="tablaProfesionales{{ sufijo }}" class="tbl" border="0" cellspacing="1" cellpadding="4" width="100%" >   
+                                                            <tr id='0' name= '0'>          
+                                                                <td class="hr" width="10" align="left"></td>
+                                                                <td class="hr" width="10" align="left"></td>
+                                                                <td class="hr" width="50" align="left"><strong>PROFESIONAL</strong></td>
+                                                                <td class="hr" width="50" align="left"><strong>PPAL.</strong></td>
+                                                            </tr>
+                                                        </table> 
+                                                    </div>
+                                                <!--Fin Carga dinámica por javaScript-->
+                                            </div>
+                                        </div> 
+                                    </fieldset>    
+                                </div>
+                            </div>    
+                        </div>
+    

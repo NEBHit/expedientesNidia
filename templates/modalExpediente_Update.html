@@ -1,0 +1,226 @@
+{% block modal %}
+{% set sufijo = "Edit" %}
+<div class="modal fade" id="update_Expediente" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Actualizar Expediente</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <form id="formExpedienteUpdate" method="post" > 
+                <input type="hidden" id="IDEXPEDIENTEEditHIDDEN" name="IDEXPEDIENTEEditHIDDEN"/>
+                <input type="hidden" id="IDESTADOEXPEDIENTEEditHIDDEN" name="IDESTADOEXPEDIENTEEditHIDDEN"/>
+                <div class="modal-body">
+                    <div class="container contenido">
+                        <!-- Content Wrapper -->
+                        <div id="content-wrapper" class="d-flex flex-column">
+                            <!-- Main Content -->
+                            <div id="content">
+                                <div id="accordion">
+                                    <!-- ========== BLOQUE EXPEDIENTE ========== -->
+                                    {% include 'expediente/bloque_expediente.html' %}
+                                
+                                    <!-- ========== BLOQUE PROPIETARIOS ========== -->
+                                    {% include 'expediente/bloque_propietario.html' %}
+
+                                    <!-- ========== BLOQUE PROFESIONALES ========== -->
+                                    {% include 'expediente/bloque_profesional.html' %}
+                                </div>    
+                            </div>    
+                    
+                            <div class="modal-footer">
+                                <button type="button" class="cancela btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="acepta btn btn-success" id="modificar_Expediente" >Actualizar</button>
+                            </div>
+                        <!-- /.container-fluid -->
+                        </div>
+                    <!-- End of Main Content -->	
+                    </div>
+                <!-- end of body block -->
+                </div>
+            </form>   
+        </div>
+    </div>
+</div>
+
+<script>
+
+    document.getElementById("nroPartidaEdit").addEventListener("keydown", function (e) {
+        validarCaracterEnNro(e);
+    });
+
+    document.getElementById("nroPartidaEdit").addEventListener("input", function (e) {
+        validarLongitudNro(e, 7)
+    });
+  
+    document.getElementById('formExpedienteUpdate').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Evita que el formulario haga un POST tradicional
+
+        const form = e.target;
+        const formData = new FormData(form);
+
+        const id = document.getElementById('IDEXPEDIENTEEditHIDDEN').value;
+        const formJSON = Object.fromEntries(formData.entries());
+
+        // Mapear los nombres
+        const payload = {
+                nroEntrada: formJSON.nroExpedienteMesaEntradaEdit,
+                anioMesaEntrada: formJSON.anioMesaEntradaEdit,
+                nroExpedienteMesaEntrada: formJSON.nroExpedienteMesaEntradaEdit,
+                nroPartida: formJSON.nroPartidaEdit,
+                sucesion: formJSON.sucesionEdit,
+                observaciones: formJSON.observacionesEdit,
+                idTipoObra: formJSON.idTipoObraEdit,
+                IDESTADOEXPEDIENTEEditHIDDEN: formJSON.IDESTADOEXPEDIENTEEditHIDDEN,
+                idEstadoexpedienteEdit: formJSON.idEstadoExpedienteEdit,
+                // Tablas dinamicas: Propietarios y Profesionales
+                idFilaEdit: formJSON.idFilaEdit,
+                idFilaProfEdit: formJSON.idFilaEdit,
+                propietarios: [],
+                profesionales: []
+        };
+        try {
+            // Recorrer todos los campos que empiezan con "propEdit" y agregarlos al array
+            for (let key in formJSON) {
+                if (key.startsWith('propEdit')) {
+                    payload.propietarios.push(formJSON[key]);
+                }
+            }
+           // Recorrer todos los campos que empiezan con "profEdit" y agregarlos al array
+            for (let key in formJSON) {
+                if (key.startsWith('profEdit')) {
+                    payload.profesionales.push(formJSON[key]);
+                }
+            }
+
+            //Mostrar payload completo con alert antes de enviar
+            //alert("Payload a enviar:\n" + JSON.stringify(payload, null, 2));
+                
+            const response = await fetch(`/expediente/${id}`, {
+                        method: "PUT",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+            }); 
+                 
+            if (response.ok) {
+                    $('#update_Expediente').modal('hide');
+                    location.reload(); // recarga tabla con datos actualizados
+            } else {
+                    const error = await response.json();
+                    alert('Error al actualizar el Expediente: ' + (error.error || 'Error desconocido'));
+            }
+        } catch (err) {
+            alert('Error de red o del servidor: ' + err.message);
+        }
+    });
+
+/*    function actualizarVisibilidadEstado() {
+        const selectEstado = document.getElementById("idEstadoExpedienteEdit");
+        const rowDerecho = document.getElementById("rowDerechoConstruccionEdit");
+
+        if (!selectEstado || !rowDerecho) return;
+
+        const valorSeleccionado = selectEstado.value;
+
+        if (valorSeleccionado === "6") {
+            rowDerecho.style.display = "block";
+        } else {
+            rowDerecho.style.display = "none";
+        }
+    }
+*/
+ /*   function actualizarTipoPago() {
+
+        const tipoPago = document.getElementById("idTipoPagoEdit");
+        const divContado = document.getElementById("divContadoEdit");
+        const divCuotas = document.getElementById("divCuotasEdit");
+
+        const cantCuotas = document.getElementById("cantCuotasEdit");
+        const fechaPrimer = document.getElementById("fechaPagoPrimerCtaEdit");
+        const fechaUltima = document.getElementById("fechaPagoUltimaCtaEdit");
+
+        if (!tipoPago) return;
+
+        if (tipoPago.value == "1") {
+            divContado.style.display = "block";
+            divCuotas.style.display = "none";
+
+            cantCuotas.disabled = true;
+            fechaPrimer.disabled = true;
+            fechaUltima.disabled = true;
+        } else if (tipoPago.value == "2") {
+            divContado.style.display = "none";
+            divCuotas.style.display = "flex";
+
+            cantCuotas.disabled = false;
+            fechaPrimer.disabled = false;
+            fechaUltima.disabled = false;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document
+            .getElementById("idEstadoExpedienteEdit")
+            ?.addEventListener("change", actualizarVisibilidadEstado);
+
+        document
+            .getElementById("idTipoPagoEdit")
+            ?.addEventListener("change", actualizarTipoPago);
+
+    });*/
+    /*document.addEventListener("DOMContentLoaded", function() {
+        const selectEstado = document.getElementById("idEstadoExpedienteEdit");
+        const rowDerecho = document.getElementById("rowDerechoConstruccionEdit");
+
+        function actualizarVisibilidad() {
+            const valorSeleccionado = selectEstado.value
+
+            alert ("estado:" + valorSeleccionado )
+            if (valorSeleccionado === "6") {  //Corresponde al Estado de Espediente = "Liquidacion Derecho Construccion Urbanismo"
+                rowDerecho.style.display = "block";
+            } else {
+                rowDerecho.style.display = "none";
+            }
+        }
+
+        // Ejecuta al cargar
+        actualizarVisibilidad();
+
+        // Ejecuta cuando cambia
+        selectEstado.addEventListener("change", actualizarVisibilidad);
+
+        const selectTipoPago = document.getElementById("idTipoPagoEdit");
+        const tipoPago = document.getElementById("idTipoPagoEdit");
+        const divContado = document.getElementById("divContadoEdit");
+        const divCuotas = document.getElementById("divCuotasEdit");
+
+        const cantCuotas = document.getElementById("cantCuotasEdit");
+        const fechaPrimer = document.getElementById("fechaPagoPrimerCtaEdit");
+        const fechaUltima = document.getElementById("fechaPagoUltimaCtaEdit");
+
+        tipoPago.addEventListener("change", function () {
+            if (this.value == "1") { 
+                // Contado
+                divContado.style.display = "block";
+                divCuotas.style.display = "none";
+
+                cantCuotas.disabled = true;
+                fechaPrimer.disabled = true;
+                fechaUltima.disabled = true;
+            } 
+            else if (this.value == "2") { 
+                // Cuotas
+                divContado.style.display = "none";
+                divCuotas.style.display = "flex";
+
+                cantCuotas.disabled = false;
+                fechaPrimer.disabled = false;
+                fechaUltima.disabled = false;
+            }
+        });
+    });
+    */
+    
+</script>
+{% endblock modal %}

@@ -1,0 +1,284 @@
+{% block modal %}
+{% set sufijo = "" %}
+<div class="modal fade" id="add_Expediente" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Agregar Expediente</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="container contenido">
+                <!-- Content Wrapper -->
+                <div id="content-wrapper" class="d-flex flex-column">
+                    <!-- Main Content -->
+                    <div id="content">
+                        <form id="formExpediente" action="/agregar_expediente" method="post">
+                            <div class="modal-body container contenido">
+                                <div id="accordion">
+                                    <!-- ========== BLOQUE EXPEDIENTE ========== -->
+                                    {% include 'expediente/bloque_expediente.html' %}
+
+                                    <!-- ========== BLOQUE PROPIETARIOS ========== -->
+                                    {% include 'expediente/bloque_propietario.html' %}
+
+                                    <!-- ========== BLOQUE PROFESIONALES ========== -->
+                                    {% include 'expediente/bloque_profesional.html' %}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="cancela btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="acepta btn btn-success">Agregar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>              
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+<script>
+    // Establecer el año actual como valor por defecto y límite máximo
+    const inputAnio = document.getElementById("anioMesaEntrada");
+    const anioActual = new Date().getFullYear();
+    inputAnio.max = anioActual;
+    inputAnio.value = anioActual;
+    
+    document.getElementById("anioMesaEntrada").value = anioActual;
+
+    document.getElementById("nroPartida").addEventListener("keydown", function (e) {
+       validarCaracterEnNro(e);
+    });
+
+    document.getElementById("nroPartida").addEventListener("input", function (e) {
+       validarLongitudNro(e, 7)
+    });
+
+    /*function validarEstadoExpediente() {
+    //Funcion que valida el ingreso obligatorio de los campos
+    //  EstadoExpediente =  Liquidación Derecho Construcción Urbanismo (valor 11)
+
+        const selectEstado = document.getElementById("idEstadoExpediente").value;
+        if (selectEstado !== "7") return true; // No aplica validación
+        
+        const selectPago = document.getElementById("idTipoPago").value;
+        const fechaContado = document.getElementById("fechaPagoContado").value;
+        const cantCuotas = document.getElementById("cantCuotas").value;
+        const fechaPrimera = document.getElementById("fechaPagoPrimerCta").value;
+        const fechaUltima = document.getElementById("fechaPagoUltimaCta").value;
+
+        if (selectPago === "1"){ //Corresponde a Tipopago = CONTADO
+            if(!fechaContado){
+                    alert('Se ha seleccionado estado de Expediente: Liquidación Derecho Construcción Urbanismo y tipo de pago CONTADO por lo tanto debe ingresar la fecha de Pago');
+                    return false;
+            }
+        }else{
+                if(!cantCuotas){
+                    alert('Se ha seleccionado estado de Expediente: Liquidación Derecho Construcción Urbanismo y tipo de pago CUOTAS por lo tanto debe ingresar la cantidad de ctas del plan seleccioando');
+                    return false;   
+                }
+
+                if(cantCuotas <= 1){
+                    alert('Se ha seleccionado estado de Expediente: Liquidación Derecho Construcción Urbanismo y tipo de pago CUOTAS por lo tanto la cantidad de ctas debe ser superior a l.');
+                    return false;   
+                }
+
+                if(!fechaPrimera){
+                    alert('Se ha seleccionado estado de Expediente: Liquidación Derecho Construccion Urbanismo y tipo de pago CUOTAS por lo tanto debe ingresar las fecha de Pago de la primera Cta');
+                    return false;   
+                }
+
+                if (!fechaUltima){
+                    alert('Se ha seleccionado estado de Expediente: Liquidación Derecho Construccion Urbanismo y tipo de pago CUOTAS por lo tanto debe ingresar las fecha de Pago de la última Cta');
+                    return false;   
+                }
+        }
+        return true; 
+    }
+  */ 
+    //Convierte los checkboxes de Tipo Obra en un JSON antes de enviar el form
+    function actualizarTiposSeleccionados() {
+        const seleccionados = [];
+        document.querySelectorAll('.tipo-obra-check:checked').forEach(cb => {
+            seleccionados.push(cb.value);
+        });
+
+         // Si no hay nada seleccionado, se asigna null o una cadena vacía
+        if (seleccionados.length === 0) {
+                    alert("Debe seleccionar al menos un Tipo de Obra");
+                    exit;
+        }            
+        // Guardamos lista como JSON
+        document.getElementById("idTipoObra").value = JSON.stringify(seleccionados);
+    }
+
+/*    document.addEventListener("DOMContentLoaded", function() {
+        const selectEstado = document.getElementById("idEstadoExpediente");
+        const rowDerecho = document.getElementById("rowDerechoConstruccion");
+
+        function actualizarVisibilidad() {
+            const valorSeleccionado = selectEstado.value
+
+            alert ("estador:" + valorSeleccionado )
+            if (valorSeleccionado === "6") {  //Corresponde al Estado de Espediente = "Liquidacion Derecho Construccion Urbanismo"
+                rowDerecho.style.display = "block";
+            } else {
+                rowDerecho.style.display = "none";
+            }
+        }
+
+        // Ejecuta al cargar
+        actualizarVisibilidad();
+
+        // Ejecuta cuando cambia
+        selectEstado.addEventListener("change", actualizarVisibilidad);
+
+        const selectTipoPago = document.getElementById("idTipoPago");
+        const tipoPago = document.getElementById("idTipoPago");
+        const divContado = document.getElementById("divContado");
+        const divCuotas = document.getElementById("divCuotas");
+
+        const cantCuotas = document.getElementById("cantCuotas");
+        const fechaPrimer = document.getElementById("fechaPagoPrimerCta");
+        const fechaUltima = document.getElementById("fechaPagoUltimaCta");
+
+        tipoPago.addEventListener("change", function () {
+            if (this.value == "1") { 
+                // Contado
+                divContado.style.display = "block";
+                divCuotas.style.display = "none";
+
+                cantCuotas.disabled = true;
+                fechaPrimer.disabled = true;
+                fechaUltima.disabled = true;
+            } 
+            else if (this.value == "2") { 
+                // Cuotas
+                divContado.style.display = "none";
+                divCuotas.style.display = "flex";
+
+                cantCuotas.disabled = false;
+                fechaPrimer.disabled = false;
+                fechaUltima.disabled = false;
+            }
+        });
+    });
+   */ 	
+    /*document.getElementById('formExpediente').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Evita que el formulario haga un POST tradicional
+
+        const form = e.target;
+       
+        actualizarTiposSeleccionados();
+    
+        if (!validarEstadoExpediente()) { return; }
+    
+        const formData = new FormData(form);
+        // Eliminar genéricos vacíos
+        for (const [key, value] of formData.entries()) {
+            if (value === "") formData.delete(key);
+        }
+
+        if (!formData.get("observaciones")) {
+           formData.set("observaciones", "");
+        }
+  
+       // Eliminar fechas vacías (FastAPI no las acepta). la funcion anterior no funciona en estos casos porque son campos que se habilitan y de deshabilitan por javascript
+        if (cantCuotas.value.trim() === "") {
+            formData.delete("cantCuotas");   // no lo mandás → backend recibe None
+        } else {
+            formData.set("cantCuotas", cantCuotas.value);
+        }
+                
+        if (!formData.get("fechaPagoPrimerCta"))
+            formData.delete("fechaPagoPrimerCta");
+
+        if (!formData.get("fechaPagoUltimaCta"))
+            formData.delete("fechaPagoUltimaCta");
+
+        if (!formData.get("fechaPagoContado"))
+            formData.delete("fechaPagoContado");
+
+        try {
+            const response = await fetch("/agregar_expediente", {
+                method: "POST",
+                body: formData
+            });       
+    
+            if (response.ok) {
+                $('#add_Expediente').modal('hide');
+                location.reload(); // recarga tabla con datos actualizados
+            } else {
+               const error = await response.json();
+
+               alert(
+                   'Error al agregar el Expediente: ' +
+                   (error.message || error.error || error.detail || 'Error desconocido')
+               );
+            }
+        } catch (err) {
+            alert('Error de red o del servidor: ' + err.message);
+        }
+    });*/
+    
+    document.getElementById('formExpediente').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Evita que el formulario haga un POST tradicional
+
+        const form = e.target;
+       
+        actualizarTiposSeleccionados();
+    
+        if (!validarEstadoExpediente()) { return; }
+    
+        const formData = new FormData(form);
+        // Eliminar genéricos vacíos
+        for (const [key, value] of formData.entries()) {
+            if (value === "") formData.delete(key);
+        }
+
+        if (!formData.get("observaciones")) {
+           formData.set("observaciones", "");
+        }
+  
+       // Eliminar fechas vacías (FastAPI no las acepta). la funcion anterior no funciona en estos casos porque son campos que se habilitan y de deshabilitan por javascript
+        if (cantCuotas.value.trim() === "") {
+            formData.delete("cantCuotas");   // no lo mandás → backend recibe None
+        } else {
+            formData.set("cantCuotas", cantCuotas.value);
+        }
+                
+        if (!formData.get("fechaPagoPrimerCta"))
+            formData.delete("fechaPagoPrimerCta");
+
+        if (!formData.get("fechaPagoUltimaCta"))
+            formData.delete("fechaPagoUltimaCta");
+
+        if (!formData.get("fechaPagoContado"))
+            formData.delete("fechaPagoContado");
+
+    try {
+        const response = await fetch("/agregar_expediente", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert(data.message);
+            $('#add_Expediente').modal('hide');
+            location.reload();
+        } else {
+            alert(
+                'Error al agregar el Expediente: ' +
+                (data.message || data.error || data.detail || 'Error desconocido')
+            );
+        }
+
+    } catch (err) {
+        alert('Error de red o del servidor: ' + err.message);
+    }
+});
+</script>

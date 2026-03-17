@@ -1,0 +1,36 @@
+{% extends "layouts/layout.html" %}
+
+{% block contentCuerpo %}
+
+<!--Incluir las ventanas modales para Crud
+    para el correcto funcionamiento de las ventanas modales se debe importar app.js con las funciones correspondientes. En este caso esta referenciado en loyuot.thml
+-->
+{% include "modalEstadoInspeccion_Add.html" %}
+{% include "modalEstadoInspeccion_Update.html" %}
+{% include "modalEstadoInspeccion_Delete.html" %}
+
+<!--Armar la tabla de inspectors para el Crud-->
+{% import "tablas.html" as tablas %}
+
+<!--Nombre de las Columnas a mostar-->
+{% set encabezado = [
+      {'nombre': 'NOMBRE'},
+      {'nombre': 'DESCRIPCION'}
+    ] %}
+
+<!--Valores de las filas a mostar-->
+ {% set valores = [
+      ] %}
+ 
+ {% for estadoInspeccion in estadosInspecciones %}
+    {% set _ = valores.append({
+            'id': estadoInspeccion.idEstadoInspeccion,
+            'nombre': estadoInspeccion.nombre,
+            'descripcion': estadoInspeccion.descripcion
+        }) %}
+ {% endfor %}    
+
+ <!--PARAMETROS:   mostrar_tabla(titulo, nomtabla, columnas, valores, request) -->
+{{ tablas.mostrar_tabla("Estados de Inspecciones Actuales", "Estado Inspeccion", "EstadoInspeccion",encabezado, valores, request) }}
+
+{% endblock %}
