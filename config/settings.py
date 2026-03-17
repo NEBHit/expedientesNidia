@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 
+#Clase de seteo de variables para el envio de mails
 class Settings(BaseSettings):
 
     MAIL_USERNAME: str
