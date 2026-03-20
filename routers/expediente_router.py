@@ -21,10 +21,7 @@ from services.tipoObra_service import TipoObraService
 from services.tipoPago_service import TipoPagoService
 from services.estadoExpediente_service import EstadoExpedienteService
 from services.tipoExpediente_service import TipoExpedienteService 
-
-from services.email_service import enviar_expediente_creado
-
-from utils.mail import enviar_mail 
+from services.notificacionMail_service import enviarMailSegunEstado
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -296,22 +293,14 @@ async def agregar_expediente_post(
             )
         
         else:
-            # Enviar correo una vez actualizado
-            try:
-                background_tasks.add_task(
-                    enviar_expediente_creado,
-                    "nidia@9dejulio.gov.ar",
-                    nuevo_expediente.nroLegajo,
-                    nuevo_expediente.anioMesaEntrada,
-                    nuevo_expediente.nroPartida
-                )
-
-            except Exception as e:
-                print(f"⚠️ Error al enviar el correo: {e}")
-
+            # Enviar correo una vez agregado el expediente y sus relaciones
+            resultado_mail = enviarMailSegunEstado(idEstadoExpediente,nuevo_expediente,background_tasks)
+           
             return JSONResponse(
                 status_code=status.HTTP_200_OK,
-                content={"message": "Expediente agregado exitosamente y se ha enviado el mail."}
+                content={"message": "El Expediente se ha agregado exitosamente.",
+                           "mail": resultado_mail
+                        }
             )
 
 
@@ -348,6 +337,7 @@ def get_estados_expediente(idExpediente: int, session: Session = Depends(get_ses
 @router.put("/expediente/{idExpediente}", response_model=ExpedienteModel)
 async def update_expediente(
     request: Request, 
+    background_tasks: BackgroundTasks,
     idExpediente: int,
     expediente_data: dict = Body(...),
     session: Session = Depends(get_session)
@@ -423,37 +413,23 @@ async def update_expediente(
                         status_code=status.HTTP_404_NOT_FOUND,
                         content={"error": "Expediente no encontrado."}
                     )
-    else:    
+    else:  
+            # Enviar correo una vez agregado el expediente y sus relaciones
+       
+            if idEstadoExpedienteAnterior != idEstadoExpedienteNuevo:
+                    #Leo el expedeinte actualizado para que aparezcan los datos actualizados en el mail
+                    expediente_actualizado = service.obtener_expediente_por_id(idExpediente)
+
+                    resultado_mail = enviarMailSegunEstado(idEstadoExpedienteNuevo,expediente_actualizado,background_tasks)
+                     
             return JSONResponse(
                 status_code=status.HTTP_200_OK,
-                content={"message": "Expediente actualizado exitosamente"}
-              )
-    
-    #Cuando tenga que enviar el mail segun el estado a actulizar debo hacer esto y sacar el if anterior
-'''    if exito == "noExiste":
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"error": "Expediente no encontrado."}
-        )
+                content={"message": "El Expediente se ha actualizado exitosamente.",
+                           "mail": resultado_mail
+                        }
+            )
 
-    # Enviar correo una vez actualizado
-    try:
-        destinatario = "nidia@9deJulio.gob.ar"
-        asunto = f"Expediente actualizado N° {expediente.nroExpedienteMesaEntrada}/{expediente.anioMesaEntrada}"
-        mensaje = f"""
-        Se actualizó el expediente N° {expediente.nroExpedienteMesaEntrada}/{expediente.anioMesaEntrada}.
-        Nuevo estado: {idEstadoExpedienteNuevo}.
-        Observaciones: {expediente.observaciones or 'Ninguna'}.
-        """
-        enviar_mail(destinatario, asunto, mensaje)
-    except Exception as e:
-        print(f"⚠️ Error al enviar el correo: {e}")
-
-    return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content={"message": "Expediente actualizado exitosamente"}
-    )
-''' 
+  
 
 # -------------------------------
 # ELIMINAR EXPEDIENTE
