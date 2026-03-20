@@ -102,125 +102,32 @@
                         body: JSON.stringify(payload)
             }); 
                  
+            const data = await response.json();
+
             if (response.ok) {
-                    $('#update_Expediente').modal('hide');
-                    location.reload(); // recarga tabla con datos actualizados
-            } else {
-                    const error = await response.json();
-                    alert('Error al actualizar el Expediente: ' + (error.error || 'Error desconocido'));
+
+                let mensaje = data.message;
+
+                // Mostrar ambos mensajes. El del Expedeinte si se pudo agregar y el del envio de mail.
+                //El expedeinte se agrega independientemente del envio del mail. Si el mail falla el expediente igual se crea.
+                if (data.mail) {
+                    if (data.mail.ok) {
+                        mensaje += "\n\n" + data.mail.mensaje;
+                    } else {
+                        mensaje += "\n\n" + data.mail.mensaje;
+                    }
+                }
+
+                alert(mensaje);
+
+                $('#update_Expediente').modal('hide');
+                location.reload();
             }
+           
         } catch (err) {
             alert('Error de red o del servidor: ' + err.message);
         }
     });
-
-/*    function actualizarVisibilidadEstado() {
-        const selectEstado = document.getElementById("idEstadoExpedienteEdit");
-        const rowDerecho = document.getElementById("rowDerechoConstruccionEdit");
-
-        if (!selectEstado || !rowDerecho) return;
-
-        const valorSeleccionado = selectEstado.value;
-
-        if (valorSeleccionado === "6") {
-            rowDerecho.style.display = "block";
-        } else {
-            rowDerecho.style.display = "none";
-        }
-    }
-*/
- /*   function actualizarTipoPago() {
-
-        const tipoPago = document.getElementById("idTipoPagoEdit");
-        const divContado = document.getElementById("divContadoEdit");
-        const divCuotas = document.getElementById("divCuotasEdit");
-
-        const cantCuotas = document.getElementById("cantCuotasEdit");
-        const fechaPrimer = document.getElementById("fechaPagoPrimerCtaEdit");
-        const fechaUltima = document.getElementById("fechaPagoUltimaCtaEdit");
-
-        if (!tipoPago) return;
-
-        if (tipoPago.value == "1") {
-            divContado.style.display = "block";
-            divCuotas.style.display = "none";
-
-            cantCuotas.disabled = true;
-            fechaPrimer.disabled = true;
-            fechaUltima.disabled = true;
-        } else if (tipoPago.value == "2") {
-            divContado.style.display = "none";
-            divCuotas.style.display = "flex";
-
-            cantCuotas.disabled = false;
-            fechaPrimer.disabled = false;
-            fechaUltima.disabled = false;
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", function () {
-
-        document
-            .getElementById("idEstadoExpedienteEdit")
-            ?.addEventListener("change", actualizarVisibilidadEstado);
-
-        document
-            .getElementById("idTipoPagoEdit")
-            ?.addEventListener("change", actualizarTipoPago);
-
-    });*/
-    /*document.addEventListener("DOMContentLoaded", function() {
-        const selectEstado = document.getElementById("idEstadoExpedienteEdit");
-        const rowDerecho = document.getElementById("rowDerechoConstruccionEdit");
-
-        function actualizarVisibilidad() {
-            const valorSeleccionado = selectEstado.value
-
-            alert ("estado:" + valorSeleccionado )
-            if (valorSeleccionado === "6") {  //Corresponde al Estado de Espediente = "Liquidacion Derecho Construccion Urbanismo"
-                rowDerecho.style.display = "block";
-            } else {
-                rowDerecho.style.display = "none";
-            }
-        }
-
-        // Ejecuta al cargar
-        actualizarVisibilidad();
-
-        // Ejecuta cuando cambia
-        selectEstado.addEventListener("change", actualizarVisibilidad);
-
-        const selectTipoPago = document.getElementById("idTipoPagoEdit");
-        const tipoPago = document.getElementById("idTipoPagoEdit");
-        const divContado = document.getElementById("divContadoEdit");
-        const divCuotas = document.getElementById("divCuotasEdit");
-
-        const cantCuotas = document.getElementById("cantCuotasEdit");
-        const fechaPrimer = document.getElementById("fechaPagoPrimerCtaEdit");
-        const fechaUltima = document.getElementById("fechaPagoUltimaCtaEdit");
-
-        tipoPago.addEventListener("change", function () {
-            if (this.value == "1") { 
-                // Contado
-                divContado.style.display = "block";
-                divCuotas.style.display = "none";
-
-                cantCuotas.disabled = true;
-                fechaPrimer.disabled = true;
-                fechaUltima.disabled = true;
-            } 
-            else if (this.value == "2") { 
-                // Cuotas
-                divContado.style.display = "none";
-                divCuotas.style.display = "flex";
-
-                cantCuotas.disabled = false;
-                fechaPrimer.disabled = false;
-                fechaUltima.disabled = false;
-            }
-        });
-    });
-    */
     
 </script>
 {% endblock modal %}

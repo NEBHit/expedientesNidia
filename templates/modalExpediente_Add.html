@@ -267,14 +267,23 @@
         const data = await response.json();
 
         if (response.ok) {
-            alert(data.message);
+
+            let mensaje = data.message;
+
+            // Mostrar ambos mensajes. El del Expedeinte si se pudo agregar y el del envio de mail.
+            //El expedeinte se agrega independientemente del envio del mail. Si el mail falla el expediente igual se crea.
+            if (data.mail) {
+                if (data.mail.ok) {
+                    mensaje += "\n\n" + data.mail.mensaje;
+                } else {
+                    mensaje += "\n\n" + data.mail.mensaje;
+                }
+            }
+
+            alert(mensaje);
+
             $('#add_Expediente').modal('hide');
             location.reload();
-        } else {
-            alert(
-                'Error al agregar el Expediente: ' +
-                (data.message || data.error || data.detail || 'Error desconocido')
-            );
         }
 
     } catch (err) {
