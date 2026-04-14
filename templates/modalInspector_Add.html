@@ -1,0 +1,33 @@
+{% block modal %}
+<div class="modal fade" id="add_Inspector" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Agregar Inspector</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <form action="/agregar_inspector" method="post">
+                <div class="modal-body">
+                    <fieldset class="form-group">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="nombre">NOMBRE *</label>
+                                <input type="text" class="form-control" align="left" title="Nombre" name="nombre" id="nombre" placeholder="Nombre*" oninput="this.value=this.value.toUpperCase()" maxlength="100" required/>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="nombre">APELLIDO *</label>
+                                <input type="text" class="form-control" align="left" title="Apellido" name="apellido" id="apellido" placeholder="Apellido*" oninput="this.value=this.value.toUpperCase()" maxlength="100" required/>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancela btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="acepta btn btn-success">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock modal %}

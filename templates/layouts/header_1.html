@@ -1,0 +1,296 @@
+<style>
+  /* --- HEADER SUPERIOR --- */
+  .header-contact-info {
+    background-color: #faf8f8;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+    padding: 0.5rem 1.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .header-logo {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .header-logo img {
+    width: 50px;
+    height: auto;
+  }
+
+  .tituloPpal {
+    color: #000;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.3;
+    text-align: center;
+  }
+
+  /* Botón colapsable */
+  .collapse-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #f8f9fa;
+    transition: transform 0.3s;
+    margin-bottom: 1rem;
+    width: 100%;
+    text-align: right;
+  }
+
+  /* --- SIDEBAR --- */
+  .sidebar {
+    background: linear-gradient(180deg, #0d0d0d, #1a1a1a);
+    width: 240px;
+    height: calc(100vh - 72px);
+    position: fixed;
+    top: 72px;
+    left: 0;
+    padding: 1rem;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.6);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .sidebar.collapsed {
+    width: 70px;
+  }
+
+  /* Logo del sidebar */
+  .sidebar .logo img {
+    width: 70%;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .sidebar.collapsed .logo img {
+    width: 0;
+    opacity: 0;
+  }
+
+  .sidebar .tituloPpal {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    transition: opacity 0.3s;
+  }
+
+  .sidebar.collapsed .tituloPpal {
+    opacity: 0;
+  }
+
+  /* --- NAV --- */
+  .navbar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-item {
+    width: 100%;
+  }
+
+  .nav-link {
+    color: #f8f9fa !important;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .nav-link:hover {
+    background-color: #343a40;
+    color: #fc9cd7 !important;
+  }
+
+  .nav-icon {
+    font-size: 1.2rem;
+    width: 20px;
+    text-align: center;
+  }
+
+  .sidebar.collapsed .nav-text {
+    display: none;
+  }
+
+  /* --- SUBMENÚS --- */
+  .dropdown-menu {
+    background: rgba(30,30,30,0.95) !important;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
+    margin-left: 10px;
+    padding: 0.3rem 0;
+    transition: all 0.3s;
+  }
+
+  .dropdown-item {
+    color: #e0e0e0 !important;
+    padding: 8px 20px;
+    border-radius: 8px;
+    transition: all 0.25s ease-in-out;
+  }
+
+  .dropdown-item:hover,
+  .dropdown-item:focus {
+    background-color: #fc9cd7 !important;
+    color: #fff !important;
+    border-radius: 12px;
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(252,156,215,0.4);
+  }
+
+  .nav-link.dropdown-toggle::after {
+    border-top-color: #f8f9fa;
+  }
+
+  body {
+    margin-top: 72px;
+    margin-left: 240px;
+    background-color: #f8f9fa;
+    transition: margin-left 0.3s ease;
+  }
+
+  .sidebar.collapsed + body {
+    margin-left: 70px;
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 992px) {
+    .sidebar {
+      position: fixed;
+      top: 72px;
+      left: -240px;
+      height: calc(100vh - 72px);
+      z-index: 1200;
+    }
+
+    .sidebar.show {
+      left: 0;
+    }
+
+    body {
+      margin-left: 0;
+    }
+
+    .navbar-nav {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .dropdown-menu {
+      position: relative;
+      left: 0;
+      width: 100%;
+      background: #111;
+      border-radius: 8px;
+      box-shadow: none;
+    }
+
+    /* Mantener header y sidebar en la misma posición */
+    .collapse-btn {
+      color: #000;
+    }
+  }
+</style>
+
+<!-- HEADER SUPERIOR -->
+<div class="header-contact-info">
+  <div class="header-logo">
+    <img src="static/imagenes/logo.jpg" alt="Logo">
+  </div>
+  <h2 class="tituloPpal">
+    OBRAS PARTICULARES - EXPEDIENTES DE OBRAS
+    <img width="8%" src="static/imagenes/logo_expediente.jpg">
+  </h2>
+  <button class="collapse-btn" onclick="toggleSidebar()">☰</button>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <div class="logo">
+    <img src="static/imagenes/logo.jpg" alt="Logo Sidebar">
+  </div>
+
+  <ul class="navbar-nav w-100">
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text">TABLAS</span>
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/estadosExpedientes">ESTADO EXPEDIENTE</a>
+        <a class="dropdown-item" href="/estadosInspecciones">ESTADO INSPECCIÓN</a>
+        <a class="dropdown-item" href="/inspectores">INSPECTOR</a>
+        <a class="dropdown-item" href="/tiposExpedientes">TIPO EXPEDIENTE</a>
+        <a class="dropdown-item" href="/tiposObras">TIPO OBRA</a>
+        <a class="dropdown-item" href="/tiposProfesiones">TIPO PROFESIÓN</a>
+      </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        <span class="nav-icon">👩‍💼</span>
+        <span class="nav-text">PROFESIONALES</span>
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/profesionales">LISTAR PROFESIONALES</a>
+      </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        <span class="nav-icon">📂</span>
+        <span class="nav-text">EXPEDIENTE</span>
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/expedientes">LISTAR EXPEDIENTES</a>
+      </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+        <span class="nav-icon">📈</span>
+        <span class="nav-text">REPORTES</span>
+      </a>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" href="/enConstruccion">EXPEDIENTES EN OFICINA</a>
+        <a class="dropdown-item" href="/enConstruccion">EXPEDIENTES FINALIZADOS</a>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<script>
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+
+  if (window.innerWidth > 992) {
+    sidebar.classList.toggle('collapsed');
+    document.body.style.marginLeft = sidebar.classList.contains('collapsed') ? '70px' : '240px';
+  } else {
+    sidebar.classList.toggle('show');
+  }
+}
+</script>

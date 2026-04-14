@@ -1,0 +1,64 @@
+{% extends "layouts/layout.html" %}
+
+{% block contentCuerpo %}
+
+<!--Incluir las ventanas modales para Crud
+    para el correcto funcionamiento de las ventanas modales se debe importar app.js con las funciones correspondientes. En este caso esta referenciado en loyuot.thml
+-->
+{% include "modalExpediente_Add.html" %}
+{% include "modalExpediente_Update.html" %}
+{% include "modalExpediente_Delete.html" %}
+
+<!--Armar la tabla de inspectors para el Crud-->
+{% import "tablaExpediente.html" as tablas %}
+
+<!--Nombre de las Columnas a mostar-->
+{% set encabezado = [
+      {'nombre': 'NRO LEGAJO.'},
+      {'nombre': 'TIPO EXP.'},
+      {'nombre': 'ESTADO'},
+      {'nombre': 'FECHA ULT. MOD.'}
+    ] %}
+
+<!--Valores de las filas a mostar-->
+{% set valores = [
+      ] %}
+
+<!-- Atencion!
+    En valores viajan los valores a mostrar en la tabla y los que se le pasan a los modales.  
+    Los 5 primeros valores coresponden a la tabla y el resto a los que se pasan al modal
+    Respetar esto porque sino la tabla se muestra mal
+ -->
+
+{% for item in expedientes %}
+    {% set expediente = item.expediente %}
+    {% set estado_id = item.ultimo_estado_id %}
+    {% set estado_nombre = item.ultimo_estado_nombre %}
+    
+    {% set _ = valores.append({
+       
+        'id': expediente.idExpediente,
+        'nroLegajo': expediente.nroLegajo ~ '/' ~ expediente.anioMesaEntrada,
+        'tipoExpediente': expediente.tipoExpediente.nombre if expediente.tipoExpediente else 'Sin Tipo',
+        'estado': estado_nombre,
+        'fechaUltimaMod': expediente.fechaUltimaMod.strftime('%d/%m/%Y') if expediente.fechaUltimaMod else '',
+        'idTipoExpediente': expediente.idTipoExpediente,
+        'nroExpediente':
+                        expediente.nroExpediente ~ '/' ~ expediente.anioExpediente
+                        if expediente.nroExpediente and expediente.anioExpediente
+                        else '',
+        'tiposObra': item.tiposObra | join(','),
+        'nroPartida': expediente.nroPartida,
+        'nroExpedienteMesaEntrada': expediente.nroExpedienteMesaEntrada,
+        'anioMesaEntrada': expediente.anioMesaEntrada,
+        'sucesion': expediente.sucesion,
+        'observaciones': expediente.observaciones,
+        'idEstadoExpediente': estado_id,
+        'catastroRafam': expediente.catastroRafam
+    }) %}
+{% endfor %}
+
+<!--PARAMETROS:   mostrar_tabla(titulo, nomBtAdd, nomtabla, columnas, encabezado,  valores, request) -->
+{{ tablas.mostrar_tabla("Expedientes Actuales", "Expediente", "Expediente", encabezado, valores, request) }}
+
+{% endblock %}

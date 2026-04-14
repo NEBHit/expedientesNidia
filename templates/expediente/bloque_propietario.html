@@ -1,0 +1,112 @@
+<!--Bloque Propietarios-->
+<!---Este bloque recibi un sufijo con los valores
+    sufijo="" para indicar que lo incluyo modalExpediente_Add.html
+    sufijo="Edit" para indicar que lo incluyo modalExpediente_Update.html
+      El sufijo se concatena a los name y id de cada etiqueta para diferenciarlos 
+ -->			                
+                                <div class="card shadow mb-4">
+                                    <div class="card-header bg-secondary text-white  py-2 mb-2" style="letter-spacing:1px;">
+                                        <a class="collapsed card-link text-white" data-toggle="collapse" href="#collapseTwo">
+                                             <div class="row" >
+                                                <div class="col-md-12 mb-1">
+                                                    <strong>PROPIETARIOS (Clickee aquí para ingresar los datos)</strong>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <fieldset class="form-group">
+                                            <div id="collapseTwo" class="collapse" data-parent="#accordion">
+                                                <div class="row">
+                                                    <div class="form-group col-md-6 mb-1">
+                                                        <label for="nombre"><strong>NOMBRE *</strong> </label>
+                                                        <input type="text" class="form-control" align="left" title="Nombre" name="nombre{{ sufijo }}" id="nombre{{ sufijo }}" placeholder="Nombre*" oninput="this.value=this.value.toUpperCase()" maxlength="100" />
+                                                    </div>
+                                                    <div class="form-group col-md-6 mb-3">
+                                                        <label for="descripcion"><strong>APELLIDO * </strong> </label>
+                                                        <input type="text"  name="apellido{{ sufijo }}"  class="form-control" id="apellido{{ sufijo }}" title="Apellido" maxlength="150" oninput="this.value=this.value.toUpperCase()" placeholder="Apellido" />
+                                                    </div>
+                                                </div>
+                                                        
+                                                <div class="row">
+                                                    <div class="form-group col-md-3 mb-1">
+                                                        <label ><strong>CUIT/CUIL * </strong></label>
+                                                        <input name="cuil_cuit{{ sufijo }}" type="text" class="form-control" id="cuil_cuit{{ sufijo }}" title="Cuit o Cuil, con el formato xx-xxxxxxxx-x"  maxlength="13" pattern=".{13,}" oninput="handleMask(event, '99-99999999-9')" placeholder="__-________-_ CUIT/CUIL*"  style="width:250px" />
+                                                    </div>
+                                                    <div class="form-group col-md-3 mb-1">
+                                                        <label ><a href="https://micuilonline.com.ar/averiguar-cuil-cuit" target="_blank" style="color:#fa51b9"><h6><strong>Consultá  <img src="/static/imagenes/cuil.png" width="80" height="50" /></strong></h6></a></label>
+                                                    </div>
+                                                    <div class="form-group col-md-2 mb-1">
+                                                        <label for="descripcion"><strong>CONTACTO PPAL? * </strong> </label>
+                                                        <select name="figuraPpal{{ sufijo }}" id="figuraPpal{{ sufijo }}" class="form-control" >
+                                                            <option value="1" >SI</option>
+                                                            <option value="0" selected>NO</option>
+                                                        </select>
+                                                    </div>
+                                                </div> 
+                                                    
+                                                <div class="row">    
+                                                    <div class="form-group col-md-6">
+                                                        <label for="nombre"><strong>DOMICILIO</strong> </label>
+                                                        <input name="calle{{ sufijo }}" type="text" class="form-control" id="calle{{ sufijo }}" title="Domicilio" maxlength="50" placeholder="Domicilio"  oninput="this.value=this.value.toUpperCase()"  />
+                                                    </div>
+                                                    <div class="col-md-1 mb-1">
+                                                        <label><strong>Nro. </strong></label>
+                                                        <input name="nroCalle{{ sufijo }}" type="number" class="form-control" id="nroCalle{{ sufijo }}" title="Nro. Calle"  min="0" max="9999" size="4"  style="width:80px" oninput = "if (!isNumber(this.value)){this.value=''}" onChange="this.value = this.value.substring(0,4)" placeholder="Nro. Calle*"  />
+                                                    </div>
+                                                    <div class="col-md-1 mb-1">
+                                                        <label><strong>PISO </strong></label>
+                                                        <input name="piso{{ sufijo }}" type="text" class="form-control" id="piso{{ sufijo }}" title="Piso" maxlength="2" size="2" style="width:75px"  oninput="this.value=this.value.toUpperCase()" onChange="this.value = this.value.substring(0,2)" placeholder="Piso" />
+                                                    </div>
+                                                        <div class="col-md-1 mb-1">
+                                                            <label><strong>DPTO. </strong></label>
+                                                            <input name="nroDpto{{ sufijo }}"  class="form-control" id="nroDpto{{ sufijo }}" title="Dpto." maxlength="2"  size="2"  style="width:75px" type="text" placeholder="Dpto."  oninput="this.value=this.value.toUpperCase()"/>
+                                                        </div>
+                                                    </div>
+                                            
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6 mb-1">
+                                                            <label ><strong>TEL&Eacute;FONO CONTACTO (CELULAR) - SIN 0 Y SIN 15. Debe ingresar al menos uno</strong></label>
+                                                        </div>
+                                                        <div class="form-group col-md-6 mb-1">
+                                                            <label><strong>E-MAIL *</strong></label>
+                                                        </div>
+                                                        <div class="form-group col-md-1 mb-1">
+                                                            <input type="number" class="form-control" title="C&oacute;digo de &aacute;rea Tel. celular" name="areaCelular{{ sufijo }}" id="areaCelular{{ sufijo }}"  placeholder="&Aacute;rea" min="1" max"9999" size="4"  style="width:80px" oninput="" onChange="this.value = this.value.substring(0,4)"  />
+                                                        </div>
+                                                        <div class="form-group col-md-5 mb-1">
+                                                            <input type="number" class="form-control" title="N&uacute;mero tel&eacute;fono celular" name="nroCelular{{ sufijo }}" id="nroCelular{{ sufijo }}"  placeholder="Nro. sin 15"  min="1" max"99999999" size="8"  style="width:120px" oninput="" onChange="this.value = this.value.substring(0,8)"   />
+                                                        </div>
+                                                        <div class="form-group col-md-6 mb-3">
+                                                            <input type="email" class="form-control" title="E-MAIL, el que usaremos para contactarlo" name="email{{ sufijo }}" id="email{{ sufijo }}" placeholder="E-mail, el que usaremos para contactarlo. Preferentemente de Gmail" oninput="this.value=this.value.toLowerCase()"  />
+                                                        </div>
+                                                    </div>
+
+                                                <!--Carga dinámica de la tabla por javaScript-->
+                                                    <input type="hidden" id="idFila{{ sufijo }}" name="idFila{{ sufijo }}" value="1" />
+                                                    <input type="hidden" name="propietarios{{ sufijo }}" id="propietarios{{ sufijo }}" value="[]">
+                                                    <div class="row"  align="center">
+                                                        <div class="form-group col-md-12"  >
+                                                            <button type="button" class="boton_1" onclick="insertarPropietario('{{ sufijo }}')" title="Agregar Propietario"  ><i class='glyphicon glyphicon-plus'></i> Agregar Propietario</button>
+                                                        </div>
+                                                    </div>   
+                                                    <div class="col-md-12">
+                                                        <table id="tablaPropietarios{{ sufijo }}" class="tbl" border="0" cellspacing="1" cellpadding="4" width="100%" >   
+                                                            <tr id='0' name= '0'>          
+                                                                <td class="hr" width="10" align="left"></td>
+                                                                <td class="hr" width="10" align="left"></td>
+                                                                <td class="hr" width="50" align="left"><strong>CUIL/CUIT</strong></td>
+                                                                <td class="hr" width="50" align="left"><strong>APELLIDO</strong></td>
+                                                                <td class="hr" width="50" align="left"><strong>NOMBRE</strong></td>
+                                                                <td class="hr" width="50" align="left"><strong>PPAL.</strong></td>
+                                                            </tr>
+                                                        </table> 
+                                                    </div>
+                                                </div>
+                                            <!--Fin Carga dinámica por javaScript-->
+                                            </div>   
+                                        </fieldset>    
+                                    </div>
+                            </div>    
+                            

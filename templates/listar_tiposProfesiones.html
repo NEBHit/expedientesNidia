@@ -1,0 +1,36 @@
+{% extends "layouts/layout.html" %}
+
+{% block contentCuerpo %}
+
+<!--Incluir las ventanas modales para Crud
+    para el correcto funcionamiento de las ventanas modales se debe importar app.js con las funciones correspondientes. En este caso esta referenciado en loyuot.thml
+-->
+{% include "modalTipoProfesion_Add.html" %}
+{% include "modalTipoProfesion_Update.html" %}
+{% include "modalTipoProfesion_Delete.html" %}
+
+<!--Armar la tabla de inspectors para el Crud-->
+{% import "tablas.html" as tablas %}
+
+<!--Nombre de las Columnas a mostar-->
+{% set encabezado = [
+      {'nombre': 'NOMBRE'},
+      {'nombre': 'DESCRIPCION'}
+    ] %}
+
+<!--Valores de las filas a mostar-->
+ {% set valores = [
+      ] %}
+ 
+ {% for tipoProfesion in tiposProfesiones %}
+    {% set _ = valores.append({
+            'id': tipoProfesion.idTipoProfesion,
+            'nombre': tipoProfesion.nombre,
+            'descripcion': tipoProfesion.descripcion
+        }) %}
+ {% endfor %}    
+
+ <!--PARAMETROS:   mostrar_tabla(titulo, nomtabla, columnas, valores, request) -->
+{{ tablas.mostrar_tabla("Tipos de Profesiones Actuales", "Tipo Profesion", "TipoProfesion", encabezado, valores, request) }}
+
+{% endblock %}

@@ -1,0 +1,151 @@
+{% block modal %}
+{% set sufijo = "" %}
+<div class="modal fade" id="add_Expediente" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Agregar Expediente</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="container contenido">
+                <!-- Content Wrapper -->
+                <div id="content-wrapper" class="d-flex flex-column">
+                    <!-- Main Content -->
+                    <div id="content">
+                        <form id="formExpediente" action="/agregar_expediente" method="post">
+                            <div class="modal-body container contenido">
+                                <div id="accordion">
+                                    <!-- ========== BLOQUE EXPEDIENTE ========== -->
+                                    {% include 'expediente/bloque_expediente.html' %}
+
+                                    <!-- ========== BLOQUE PROPIETARIOS ========== -->
+                                    {% include 'expediente/bloque_propietario.html' %}
+
+                                    <!-- ========== BLOQUE PROFESIONALES ========== -->
+                                    {% include 'expediente/bloque_profesional.html' %}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="cancela btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="submit" class="acepta btn btn-success">Agregar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>              
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+<script>
+    // Establecer el año actual como valor por defecto y límite máximo
+    const inputAnio = document.getElementById("anioMesaEntrada");
+    const anioActual = new Date().getFullYear();
+    inputAnio.max = anioActual;
+    inputAnio.value = anioActual;
+    
+    document.getElementById("anioMesaEntrada").value = anioActual;
+
+    document.getElementById("nroPartida").addEventListener("keydown", function (e) {
+       validarCaracterEnNro(e);
+    });
+
+    document.getElementById("nroPartida").addEventListener("input", function (e) {
+       validarLongitudNro(e, 7)
+    });
+
+    document.querySelectorAll('.tipo-obra-check').forEach(chk => {
+    chk.addEventListener('change', function() {
+            const sufijo = this.id.includes("Edit") ? "Edit" : "";
+            actualizarRestricciones(sufijo);
+        });
+    });
+
+    document.querySelectorAll('[id^="idTipoExpediente"]').forEach(select => {
+        select.addEventListener('change', function() {
+            const sufijo = this.id.includes("Edit") ? "Edit" : "";
+            actualizarRestricciones(sufijo);
+        });
+    });
+
+    // ============================================
+    // VALIDAR PARTIDA EN TIEMPO REAL CONTRA RAFAM
+    // ============================================
+    const inputPartida = document.getElementById("nroPartida");
+
+    inputPartida.addEventListener("blur", async function () {
+        await ejecutarValidacionRAFAM(""); 
+    });
+     
+
+    document.getElementById('formExpediente').addEventListener('submit', async function(e) {
+        e.preventDefault(); // Evita que el formulario haga un POST tradicional
+
+        const sufijo = ""; 
+
+        //Validaciones
+        if (!leerTiposSeleccionados(sufijo)) return;
+        if (!validarCombinacionesTipoExpTipoObraAntesDeEnviar(sufijo)) return;
+        if (!validarEstadoExpediente()) { return; }
+ 
+        const form = e.target;
+       
+        const formData = new FormData(form);
+        // Eliminar genéricos vacíos
+        for (const [key, value] of formData.entries()) { //Leer cada campo del formulario en busca de campos no cargados
+            if (value === "") formData.delete(key); //Si el valor es una cadena vacía (""), se elimina ese campo del FormData paar que no moleste con los Modelos 
+        }
+
+        if (!formData.get("observaciones")) {
+           formData.set("observaciones", "");
+        }
+  
+       // Eliminar fechas vacías (FastAPI no las acepta). 
+       // La funcion anterior no funciona en estos casos porque son campos que se habilitan y de deshabilitan por javascript
+        if (cantCuotas.value.trim() === "") {
+            formData.delete("cantCuotas");   // no lo mandás → backend recibe None
+        } else {
+            formData.set("cantCuotas", cantCuotas.value);
+        }
+                
+        if (!formData.get("fechaPagoPrimerCta"))
+            formData.delete("fechaPagoPrimerCta");
+
+        if (!formData.get("fechaPagoUltimaCta"))
+            formData.delete("fechaPagoUltimaCta");
+
+        if (!formData.get("fechaPagoContado"))
+            formData.delete("fechaPagoContado");
+
+    try {
+        const response = await fetch("/agregar_expediente", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.error || data.message || "Error inesperado");
+            return;
+        }
+
+        // éxito
+        let mensaje = data.message;
+
+        if (data.mail) {
+            mensaje += "\n\n" + data.mail.mensaje;
+        }
+
+        alert(mensaje);
+
+        $('#add_Expediente').modal('hide');
+        location.reload();
+
+    } catch (err) {
+        alert('Error de red o del servidor: ' + err.message);
+    }
+});
+</script>

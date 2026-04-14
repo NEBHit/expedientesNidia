@@ -1,0 +1,178 @@
+ <!--Bloque Expediente-->
+ <!---Este bloque recibi un sufijo con los valores
+    sufijo="" para indicar que lo incluyo modalExpediente_Add.html
+    sufijo="Edit" para indicar que lo incluyo modalExpediente_Update.html
+      El sufijo se concatena a los name y id de cada etiqueta para diferenciarlos 
+ -->
+                                <div class="card shadow-sm mb-4">
+                                    <div class="card-header bg-secondary text-white  py-2 mb-2" style="letter-spacing:1px;">
+                                        <a class="collapsed card-link text-white" data-toggle="collapse" href="#collapseOne">
+                                            <strong>DATOS EXPEDIENTE (Clickee aquí para ingresar los datos)</strong> 
+                                        </a>
+                                    </div>
+			                        <div class="card-body">
+			  	                        <fieldset class="form-group">
+                                            <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                                                {% if sufijo == 'Edit' %}
+                                                <div class="row justify-content-end">
+                                                    <div class="form-group col-md-4 mb-2">
+                                                        <label for="nombre"><strong>NRO. LEGAJO </strong> </label>
+                                                        <input type="text" class="form-control" align="left" title="Nro. Expediente" name="nroLegajoEdit" id="nroLegajoEdit" placeholder="Nro. Expediente" autocomplete="off" disabled/>
+                                                    </div>
+                                                </div>
+                                                {% endif %} 
+                                                {% if sufijo == 'Edit' %}
+                                                <div class="row justify-content-end">
+                                                    <div class="form-group col-md-4 mb-2">
+                                                        <label for="nombre"><strong>NRO. EXPEDIENTE </strong> </label>
+                                                        <input type="text" class="form-control" align="left" title="Nro. Expediente" name="nroExpedienteEdit" id="nroExpedienteEdit" placeholder="No generado aún" autocomplete="off" disabled/>
+                                                    </div>
+                                                </div>
+                                                {% endif %}    
+                                                <div class="row">
+                                                    <div class="form-group col-md-3 mb-2">
+                                                        <label for="nombre"><strong>TIPO DE EXPEDIENTE *</strong> </label>
+                                                        {% if sufijo == 'Edit' %}
+                                                            <input type="hidden" name="idTipoExpediente{{ sufijo }}" value="">
+                                                        {% endif %}
+                                                        <select name="idTipoExpediente{{ sufijo }}" id="idTipoExpediente{{ sufijo }}" class="form-control" {% if sufijo == 'Edit' %} disabled {% else %} required {% endif %}>
+                                                            {% for tipo in tiposExpedientes %}
+                                                                <option value="{{ tipo.idTipoExpediente }}">{{ tipo.nombre }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-md-3 mb-2">
+                                                        <label for="nombre"><strong>PARTIDA *</strong> </label>
+                                                        <input type="number" class="form-control" align="left" title="Partida" name="nroPartida{{ sufijo }}" id="nroPartida{{ sufijo }}" placeholder="Partida *"  min="0" step="1" max="9999999" required/>
+                                                    </div>
+                                                    <!-- ALERTA si Partida no existe en Rafam-->
+                                                    <div id="alertaPartida{{ sufijo }}" name="alertaPartida{{ sufijo }}" 
+                                                        class="form-group alert alert-danger col-md-6 mb-2 " 
+                                                        style="display:none; font-size:  1rem; line-height:1.3;">
+                                                    </div>
+                                                    <!-- DATOS CATASTRALES -->
+                                                    <div id="datosCatastrales{{ sufijo }}" name="datosCatastrales{{ sufijo }}" class="form-group col-md-6 mb-2"></div>
+                                                    <input type="hidden" class="form-control" value="" id="catastroRafamHidden{{ sufijo }}" name="catastroRafamHidden{{ sufijo }}" />
+                                                </div> 
+                                                <div class="row">
+                                                    <div class="form-group col-md-12 mb-2">
+                                                        <label for="nombre"><strong>TIPO DE OBRA *</strong> </label>
+                                                        <div id="tiposObrasContainer{{ sufijo }}" style="border: 1px solid #ccc; padding: 10px; border-radius: 4px;">
+                                                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 5px;">
+                                                                {% for tipo in tiposObras %}
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input tipo-obra-check"
+                                                                            type="checkbox"
+                                                                            name="tiposObra{{ sufijo }}"
+                                                                            value="{{ tipo.idTipoObra }}"
+                                                                            id="tipoObra{{ sufijo }}_{{ tipo.idTipoObra }}"
+                                                                            
+                                                                        <label class="form-check-label" for="tipoObra_{{ tipo.tiposObra }}">
+                                                                            {{ tipo.nombre }}
+                                                                        </label>
+                                                                    </div>
+                                                                {% endfor %}
+                                                            </div>
+                                                            <!-- Campo oculto donde se enviará la lista final en JSON -->
+                                                            <input type="hidden" name="idTipoObra{{ sufijo }}" id="idTipoObra{{ sufijo }}">
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                                  
+                                                <div class="row">
+                                                    <div class="form-group col-md-3 mb-2">
+                                                        <label for="nombre"><strong>NRO. EXPEDIENTE M. DE ENTRADA *</strong> </label>
+                                                        <input type="text" class="form-control" align="left" title="Nro. Expediente Mesa Entrada" name="nroExpedienteMesaEntrada{{ sufijo }}" id="nroExpedienteMesaEntrada{{ sufijo }}" placeholder="Nro. Expediente Mesa Entrada*" oninput="this.value=this.value.toUpperCase()" maxlength="100" required/>
+                                                    </div>
+                                                    <div class="form-group col-md-3 mb-1">
+                                                        <label for="descripcion"><strong>AÑO INGRESO M.ENTRADA * </strong> </label>
+                                                        <input type="number" name="anioMesaEntrada{{ sufijo }}" class="form-control" id="anioMesaEntrada{{ sufijo }}" title="Año Ingreso Mesa de Entrada" placeholder="Ej: 2025" required min="2000" size="4"/>
+                                                    </div>
+                                                    <div class="form-group col-md-3 mb-1">
+                                                        <label for="descripcion"><strong>SUCESION * </strong> </label>
+                                                        <select name="sucesion{{ sufijo }}" id="sucesion{{ sufijo }}" class="form-control" required>
+                                                            <option value="1" >SI</option>
+                                                            <option value="0" selected>NO</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-12 mb-2">
+                                                        <label for="nombre"><strong>ESTADO EXPEDIENTE *</strong> </label>
+                                                        <select name="idEstadoExpediente{{ sufijo }}" id="idEstadoExpediente{{ sufijo }}" class="form-control" required>
+                                                                {% for estado in estadosExpedientes %}
+                                                                   <option value="{{ estado.idEstadoExpediente }}">{{ estado.nombre }}</option>
+                                                                {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div id="rowDerechoConstruccion{{ sufijo }}" style="display:none;">
+                                                    <div class="card shadow-sm border-1 mb-3">
+                                                        <div class="card-header bg-secondary text-white py-2 mb-2" style="letter-spacing:1px;">
+                                                            <strong>FORMA DE PAGO</strong>
+                                                        </div>
+
+                                                        <div class="card-body">
+
+                                                            <div class="row">
+                                                                <div class="form-group col-md-6 mb-1">
+                                                                    <label><strong>TIPO PAGO *</strong></label>
+                                                                    <select name="idTipoPago{{ sufijo }}" id="idTipoPago{{ sufijo }}" class="form-control">
+                                                                        {% for tipoPago in tiposPagos %}
+                                                                            <option value="{{ tipoPago.idTipoPago }}">{{ tipoPago.nombre }}</option>
+                                                                        {% endfor %}
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="form-group col-md-3 mb-1" id="divContado{{ sufijo }}">
+                                                                    <label><strong>FECHA PAGO CONTADO</strong></label>
+                                                                    <input type="date" class="form-control"
+                                                                        name="fechaPagoContado{{ sufijo }}" id="fechaPagoContado{{ sufijo }}" value=""
+                                                                         />
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row" id="divCuotas{{ sufijo }}" style="display:none;">
+                                                                <div class="form-group col-md-3 mb-1">
+                                                                    <label><strong>CANT. CUOTAS</strong></label>
+                                                                    <input type="text" class="form-control"
+                                                                        name="cantCuotas{{ sufijo }}" id="cantCuotas{{ sufijo }}"
+                                                                        placeholder="Cantidad de Cuotas"  />
+                                                                </div>
+
+                                                                <div class="form-group col-md-3 mb-1">
+                                                                    <label><strong>FECHA PAGO 1ER. CUOTA</strong></label>
+                                                                    <input type="date" class="form-control"
+                                                                        name="fechaPagoPrimerCta{{ sufijo }}" id="fechaPagoPrimerCta{{ sufijo }}"
+                                                                        min="{{ fecha_hoy }}"  />
+                                                                </div>
+
+                                                                <div class="form-group col-md-3 mb-1">
+                                                                    <label><strong>FECHA PAGO ULTIMA CUOTA</strong></label>
+                                                                    <input type="date" class="form-control"
+                                                                        name="fechaPagoUltimaCta{{ sufijo }}" id="fechaPagoUltimaCta{{ sufijo }}"
+                                                                        min="{{ fecha_hoy }}"  />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for=""><strong>OBSERVACIONES</strong></label><br>
+                                                        <textarea  name="observaciones{{ sufijo }}" cols="100" rows="2" class="form-control" id="observaciones{{ sufijo }}" title="Observaciones generales" maxlength="250" oninput="this.value=this.value.toUpperCase()" placeholder="Observaciones" ></textarea>
+                                                    </div>   
+                                                </div>
+
+                                                <!--Carga dinámica de la tabla por javaScript-->
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <table id="tablaEstados{{ sufijo }}" class="tbl" border="0" cellspacing="1" cellpadding="4" width="80%" align="center" >   
+                                                        </table> 
+                                                    </div>
+                                                </div>
+                                                <!--Fin Carga dinámica por javaScript-->
+                                            </div>                
+           		                    </fieldset>
+			                    </div>
+                                </div>   
